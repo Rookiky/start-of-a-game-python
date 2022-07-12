@@ -1,0 +1,55 @@
+import pygame
+
+
+class Pnj(pygame.sprite.Sprite):
+
+    # générer pnj
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.sprite_sheet = pygame.image.load('adventurer-run3-00.png')
+        self.image = self.get_image(16, 32)
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.position = [x, y]
+        self.speed = 0.15
+        self.images = {
+            'bas': self.get_image(0, 0),
+            'haut': self.get_image(0, 0),
+            'gauche': self.get_image(0, 0),
+            'droite': self.get_image(0, 0)
+        }
+        self.pieds = pygame.Rect(0, 0, self.rect.width * 0.5, 12)
+        self.old_position = self.position.copy()
+
+
+    def enregistrer_location(self): self.old_position = self.position.copy()
+
+    def changer_animation(self, name):
+        self.image = self.images[name]
+        self.image.set_colorkey(0, 0)
+
+    def droite(self): self.position[0] += self.speed
+
+    def gauche(self): self.position[0] -= self.speed
+
+    def haut(self): self.position[1] -= self.speed
+
+    def bas(self): self.position[1] += self.speed
+
+    def update(self):
+        self.rect.topleft = self.position
+        self.pieds.midbottom = self.rect.midbottom
+
+    def revenir_position(self):
+        self.position = self.old_position
+        self.rect.topleft = self.position
+        self.pieds.midbottom = self.rect.midbottom
+
+    def get_image(self, x, y):
+        image = pygame.Surface([96, 96])
+        image.blit(self.sprite_sheet, (0, 0), (x, y, 32, 32))
+
+        return image
+
+
+
